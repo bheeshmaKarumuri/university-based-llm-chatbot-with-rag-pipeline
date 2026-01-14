@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign In & Sign Up</title>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <style>
+    body {
+      background-color: #080710;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+    }
+    .background {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .background .shape {
+      height: 200px;
+      width: 200px;
+      position: absolute;
+      border-radius: 50%;
+    }
+    .shape:nth-child(1) {
+      background: linear-gradient(#1845ad, #23a2f6);
+      left: -80px;
+      top: -80px;
+    }
+    .shape:nth-child(2) {
+      background: linear-gradient(to right, #ff512f, #f09819);
+      right: -30px;
+      bottom: -80px;
+    }
+    form {
+      width: 90%;
+      max-width: 400px;
+      background-color: rgba(255, 255, 255, 0.13);
+      padding: 40px 20px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+      text-align: center;
+    }
+    form h3 {
+      color: #fff;
+      font-size: 32px;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-size: 14px;
+      color: #fff;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.07);
+      border-radius: 3px;
+      border: none;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+    ::placeholder {
+      color: #e5e5e5;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background-color: #fff;
+      color: #080710;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .toggle-link {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .toggle-link a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .toggle-link a:hover {
+      color: #f09819;
+    }
+  </style>
+</head>
+<body>
+  <div style="background: #ffeeba; color: #856404; padding: 12px; border-radius: 8px; margin-bottom: 18px; font-size: 1.1em; border: 1px solid #ffeeba;">
+    <b>Note:</b> Voice input works only on modern browsers (Edge, Chrome, Firefox, Safari) and only when accessed via <b>localhost</b> or <b>HTTPS</b>. You must allow microphone access when prompted.
+  </div>
+  <div class="background">
+    <div class="shape"></div>
+    <div class="shape"></div>
+
+    <!-- Login Form -->
+    <form id="login-form">
+      <h3>Sign In</h3>
+      <label for="username">EMAIL</label>
+      <input type="text" id="username" placeholder="Email " required>
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Log In</button>
+      <div class="toggle-link">
+        <p><a href="#" id="show-signup">Don't have an account? Sign Up</a></p>
+      </div>
+    </form>
+
+    <!-- Sign Up Form -->
+    <form id="signup-form" style="display: none;">
+      <h3>Sign Up</h3>
+      <label for="new-username">Username</label>
+      <input type="text" id="new-username" placeholder="Enter Username" required>
+      <label for="new-email">Email</label>
+      <input type="email" id="new-email" placeholder="Enter Email" required>
+      <label for="new-password">Password</label>
+      <input type="password" id="new-password" placeholder="Enter Password" required minlength="6">
+      <label for="confirm-password">Confirm Password</label>
+      <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+      <button type="submit">Sign Up</button>
+      <div class="toggle-link">
+        <p><a href="#" id="show-login">Already have an account? Log In</a></p>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('show-signup').addEventListener('click', function (e) {
+      e.preventDefault();
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('signup-form').style.display = 'block';
+    });
+
+    document.getElementById('show-login').addEventListener('click', function (e) {
+      e.preventDefault();
+      document.getElementById('signup-form').style.display = 'none';
+      document.getElementById('login-form').style.display = 'block';
+    });
+
+    document.getElementById('login-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          alert('Login Successful');
+          window.location.href = '/index';
+        } else {
+          alert(data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    });
+
+    document.getElementById('signup-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const username = document.getElementById('new-username').value;
+      const email = document.getElementById('new-email').value;
+      const password = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+      }
+
+      fetch('/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, email, password })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          alert('Sign Up Successful');
+          window.location.href = '/index';  // Redirect after successful signup
+        } else {
+          alert(data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  </script>
+</body>
+</html>

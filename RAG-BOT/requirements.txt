@@ -1,0 +1,7 @@
+qdrant-client
+sentence-transformers
+tqdm
+spacy
+nltk
+agno
+google-genai

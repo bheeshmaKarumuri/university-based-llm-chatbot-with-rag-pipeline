@@ -1,0 +1,28 @@
+# Secrets and credentials
+cloud-a00ee-firebase-adminsdk-fbsvc-0bee75de00.json
+*.json
+!package.json
+!package-lock.json
+
+# Environment files
+.env
+aichatbot-main/.env
+
+# Database files
+*.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS files
+.DS_Store
+
+# Output directories
+outputs/
+aichatbot-main/outputs/
+RAG-BOT/output/
+
+# Uploads
+aichatbot-main/uploads/
